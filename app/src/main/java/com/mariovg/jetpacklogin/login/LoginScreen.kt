@@ -13,9 +13,12 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -27,17 +30,26 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import com.mariovg.jetpacklogin.login.LoginViewModel
 import java.util.regex.Pattern
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(loginViewModel: LoginViewModel) {
     Box(
         Modifier
             .fillMaxSize()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(Color(0xFF00BCD4), Color(0xFFB1E6D1),),
+                    start = Offset(0f, 0f),
+                    end = Offset.Infinite
+                )
+            )
             .padding(8.dp)
-    ) {
+            ){
+
         Header(Modifier.align(Alignment.TopEnd))
-        Body(Modifier.align(Alignment.CenterEnd))
+        Body(Modifier.align(Alignment.CenterEnd), loginViewModel)
         Footer(Modifier.align(Alignment.BottomCenter))
     }
 
@@ -52,16 +64,16 @@ fun Header(modifier: Modifier) {
 }
 
 @Composable
-fun Body(align: Modifier) {
-    var email by rememberSaveable { mutableStateOf("") }
+fun Body(align: Modifier, loginViewModel: LoginViewModel) {
+    val email: String by loginViewModel.email.observeAsState("")
     var password by rememberSaveable { mutableStateOf("") }
     var isLoginEnabled by rememberSaveable { mutableStateOf(false) }
     Column(modifier = align) {
         ImageLogo(Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.size(16.dp))
         Email(email) {
-            email = it
-            isLoginEnabled = enableLogin(email,password)
+            loginViewModel.onLoginChanged(it)
+
         }
         Spacer(modifier = Modifier.size(8.dp))
         Password(password) {
@@ -178,9 +190,9 @@ fun LoginButton(loginEnabled: Boolean) {
         enabled = loginEnabled,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFF4EA8E9),
-            contentColor = Color.White,
-            disabledBackgroundColor = Color(0xff78C8F9),
+            backgroundColor = Color(0xFFD7FFC6),
+            contentColor =  Color(0xFF4EA8E9),
+            disabledBackgroundColor = Color(0xFFAD3D3D3),
             disabledContentColor = Color.White
         )
     ) {

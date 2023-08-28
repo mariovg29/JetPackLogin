@@ -7,4 +7,21 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#D7FFC6</color> <!-- Verde pastel -->
+    <color name="colorPrimaryDark">#A9C88D</color> <!-- Verde pastel oscuro -->
+    <color name="colorAccent">#FF4081</color> <!-- Color de acento -->
+
+    <!-- Colores de texto -->
+    <color name="colorTextPrimary">#212121</color> <!-- Texto primario -->
+    <color name="colorTextSecondary">#727272</color> <!-- Texto secundario -->
+
+    <!-- Fondos y superficies -->
+    <color name="colorBackground">#FFFFFF</color> <!-- Fondo principal -->
+    <color name="colorSurface">#F5F5F5</color> <!-- Superficie elevada -->
+    <color name="colorDivider">#BDBDBD</color> <!-- Divisores y separadores -->
+
+    <!-- Otros colores -->
+    <color name="colorButton">#D7FFC6</color> <!-- Botón -->
+    <color name="colorError">#FF0000</color> <!-- Color de error -->
+    <color name="colorSuccess">#00FF00</color> <!-- Color de éxito -->
 </resources>
