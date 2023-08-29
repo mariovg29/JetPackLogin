@@ -1,7 +1,6 @@
-package com.mariovg.jetpacklogin.ui.theme
+package com.mariovg.jetpacklogin.login.ui
 
 import android.app.Activity
-import android.util.Patterns
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,24 +13,20 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.mariovg.jetpacklogin.R
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mariovg.jetpacklogin.login.LoginViewModel
-import java.util.regex.Pattern
+import com.mariovg.jetpacklogin.R
 
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel) {
@@ -40,13 +35,13 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(Color(0xFF00BCD4), Color(0xFFB1E6D1),),
+                    colors = listOf(Color(0xFF00BCD4), Color(0xFFB1E6D1)),
                     start = Offset(0f, 0f),
                     end = Offset.Infinite
                 )
             )
             .padding(8.dp)
-            ){
+    ) {
 
         Header(Modifier.align(Alignment.TopEnd))
         Body(Modifier.align(Alignment.CenterEnd), loginViewModel)
@@ -54,6 +49,7 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
     }
 
 }
+
 @Composable
 //align se pasa como parametro del padre box al hijo header para recibir su alineacion
 fun Header(modifier: Modifier) {
@@ -66,19 +62,18 @@ fun Header(modifier: Modifier) {
 @Composable
 fun Body(align: Modifier, loginViewModel: LoginViewModel) {
     val email: String by loginViewModel.email.observeAsState("")
-    var password by rememberSaveable { mutableStateOf("") }
-    var isLoginEnabled by rememberSaveable { mutableStateOf(false) }
+    val password: String by loginViewModel.password.observeAsState("")
+    val isLoginEnabled by loginViewModel.isLoginEnabled.observeAsState(false)
     Column(modifier = align) {
         ImageLogo(Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.size(16.dp))
         Email(email) {
-            loginViewModel.onLoginChanged(it)
+            loginViewModel.onLoginChanged(email = it, password = password)
 
         }
         Spacer(modifier = Modifier.size(8.dp))
         Password(password) {
-            password = it
-            isLoginEnabled = enableLogin(email, password)
+            loginViewModel.onLoginChanged(password = it, email = email)
         }
         Spacer(modifier = Modifier.size(8.dp))
         ForgotPassword(Modifier.align(Alignment.End))
@@ -191,7 +186,7 @@ fun LoginButton(loginEnabled: Boolean) {
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = Color(0xFFD7FFC6),
-            contentColor =  Color(0xFF4EA8E9),
+            contentColor = Color(0xFF4EA8E9),
             disabledBackgroundColor = Color(0xFFAD3D3D3),
             disabledContentColor = Color.White
         )
@@ -199,11 +194,6 @@ fun LoginButton(loginEnabled: Boolean) {
         Text(text = "Login")
 
     }
-
-}
-fun enableLogin(email: String, password: String):Boolean{
-    return Patterns.EMAIL_ADDRESS.matcher(email).matches() &&
-    password.length > 6
 
 }
 
@@ -236,24 +226,24 @@ fun Password(password: String, onTextChanged: (String) -> Unit) {
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         trailingIcon = {
-            val imagen = if(passwordVisibility){
+            val imagen = if (passwordVisibility) {
                 Icons.Filled.VisibilityOff
-            }else{
+            } else {
                 Icons.Filled.Visibility
             }
-            IconButton(onClick = {passwordVisibility = !passwordVisibility}) {
-                Icon(imageVector = imagen, contentDescription = "show password" )
-                
+            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                Icon(imageVector = imagen, contentDescription = "show password")
+
             }
         },
-        visualTransformation = if(passwordVisibility){
+        visualTransformation = if (passwordVisibility) {
             VisualTransformation.None
-        }else{
+        } else {
             PasswordVisualTransformation()
         }
 
 
-        )
+    )
 
 }
 
