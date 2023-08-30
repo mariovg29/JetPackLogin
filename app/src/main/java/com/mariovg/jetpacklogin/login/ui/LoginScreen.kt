@@ -42,10 +42,20 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
             )
             .padding(8.dp)
     ) {
+        val isLoading by loginViewModel.isLoading.observeAsState(false)
+        if (isLoading) {
+            Box(
+                Modifier
+                    .fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center
+                    ) {
+                CircularProgressIndicator()
+            }
 
-        Header(Modifier.align(Alignment.TopEnd))
-        Body(Modifier.align(Alignment.CenterEnd), loginViewModel)
-        Footer(Modifier.align(Alignment.BottomCenter))
+        } else {
+            Header(Modifier.align(Alignment.TopEnd))
+            Body(Modifier.align(Alignment.CenterEnd), loginViewModel)
+            Footer(Modifier.align(Alignment.BottomCenter))
+        }
     }
 
 }
@@ -78,7 +88,7 @@ fun Body(align: Modifier, loginViewModel: LoginViewModel) {
         Spacer(modifier = Modifier.size(8.dp))
         ForgotPassword(Modifier.align(Alignment.End))
         Spacer(modifier = Modifier.size(16.dp))
-        LoginButton(isLoginEnabled)
+        LoginButton(isLoginEnabled, loginViewModel)
         Spacer(modifier = Modifier.size(16.dp))
         LoginDivider()
         Spacer(modifier = Modifier.size(16.dp))
@@ -179,9 +189,9 @@ fun LoginDivider() {
 }
 
 @Composable
-fun LoginButton(loginEnabled: Boolean) {
+fun LoginButton(loginEnabled: Boolean, loginViewModel: LoginViewModel) {
     Button(
-        onClick = {},
+        onClick = { loginViewModel.onLoginSelected() },
         enabled = loginEnabled,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(

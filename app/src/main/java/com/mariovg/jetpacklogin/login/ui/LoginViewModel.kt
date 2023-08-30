@@ -1,11 +1,16 @@
 package com.mariovg.jetpacklogin.login.ui
 
+import android.util.Log
 import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mariovg.jetpacklogin.login.domain.LoginUseCase
+import kotlinx.coroutines.launch
 
 class LoginViewModel:ViewModel() {
 
@@ -20,6 +25,9 @@ class LoginViewModel:ViewModel() {
     private val _isLoginEnabled = MutableLiveData<Boolean>()
     val isLoginEnabled : LiveData<Boolean> = _isLoginEnabled
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading : LiveData<Boolean> = _isLoading
+
     fun onLoginChanged(email: String, password: String){
         _email.value = email
         _password.value = password
@@ -30,6 +38,17 @@ class LoginViewModel:ViewModel() {
     fun enableLogin(email: String, password: String):Boolean{
         return Patterns.EMAIL_ADDRESS.matcher(email).matches() &&
                 password.length > 6
+    }
+
+    fun onLoginSelected(){
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = loginUseCase(_email.value!!, _password.value!!)
+            if (result){
+                Log.i("Mario", "Login success")
+            }
+            _isLoading.value = false
+        }
 
     }
 }
