@@ -5,8 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mariovg.jetpacklogin.login.domain.LoginUseCase
 
 class LoginViewModel:ViewModel() {
+
+    val loginUseCase = LoginUseCase()
 
     private val _email = MutableLiveData<String>()
     val email : LiveData<String> = _email
@@ -21,6 +24,7 @@ class LoginViewModel:ViewModel() {
         _email.value = email
         _password.value = password
         _isLoginEnabled.value  = enableLogin(email,password)
+       // loginUseCase(email,password)
 
     }
     fun enableLogin(email: String, password: String):Boolean{
