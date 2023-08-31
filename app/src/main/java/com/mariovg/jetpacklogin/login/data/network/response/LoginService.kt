@@ -1,16 +1,17 @@
 package com.mariovg.jetpacklogin.login.data.network.response
 
-import com.mariovg.jetpacklogin.login.core.network.RetrofitHelper
 import com.mariovg.jetpacklogin.login.data.network.LoginClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import javax.inject.Inject
 
-class LoginService {
-    private val retrofit = RetrofitHelper.getRetrofit()
+class LoginService @Inject constructor(private val loginClient: LoginClient){
+//    private val retrofit = RetrofitHelper.getRetrofit()
 
     suspend fun doLogin(user: String, password: String): Boolean{
         return withContext(Dispatchers.IO){
-            val response = retrofit.create(LoginClient::class.java).doLogin()
+            val response = loginClient.doLogin()
             response.body()?.success ?: false
         }
 
